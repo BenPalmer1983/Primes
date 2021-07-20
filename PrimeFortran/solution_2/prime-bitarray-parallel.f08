@@ -1,11 +1,11 @@
-! gfortran -Ofast -march=native -fopenmp -o primesopenmp.x primesopenmp.f08
+! gfortran -Ofast -march=native -fopenmp -o prime-bitarray-parallel prime-bitarray-parallel.f08
 
 ! export OMP_NUM_THREADS=4
 ! export OMP_WAIT_POLICY=active
 ! export OMP_PROC_BIND=true
 
-! export OMP_NUM_THREADS=8 && export OMP_WAIT_POLICY=active && export OMP_PROC_BIND=true && ./primesopenmp.x
-! export OMP_NUM_THREADS=10 && export OMP_WAIT_POLICY=active && export OMP_PROC_BIND=true && ./primesopenmp.x
+! export OMP_NUM_THREADS=8 && export OMP_WAIT_POLICY=active && export OMP_PROC_BIND=true && ./prime-bitarray-parallel
+! export OMP_NUM_THREADS=10 && export OMP_WAIT_POLICY=active && export OMP_PROC_BIND=true && ./prime-bitarray-parallel
 
 ! Original code from solution by Thomas Jollans
 !    https://github.com/PlummersSoftwareLLC/Primes/blob/drag-race/PrimeFortran/solution_2/prime-bitarray.f08
@@ -346,12 +346,14 @@ contains
         call sieve%run_sieve()
         valid = sieve%validate_results()
         if(valid)then
-          write(*,"(A)") "Valid"
+          !write(*,"(A)") "Valid"
         else
           write(*,"(A)") "Not Valid"
         end if
 
-        write (*, "(A,I0,A,F0.8,A)") "tjol-bits;", iters, ";", time_elapsed, ";1;algorithm=base,faithful=yes,bits=1"
+        write (*, "(A,I0,A,F0.8,A,I0,A)") &
+            "benpalmer1983-bits-par;", iters, ";", time_elapsed, ";", tcount, &
+            ";algorithm=base,faithful=yes,bits=1"
     end subroutine
 
 end program
